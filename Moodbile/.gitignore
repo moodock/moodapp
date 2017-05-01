@@ -1,0 +1,12 @@
+#ignore hidden files except .gitignore.
+.*
+!.gitignore
+
+#ignore android/gradle project folders.
+assets/
+libs/
+build
+
+#ignore android/gradle project files.
+.gradle
+*.iml

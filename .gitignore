@@ -1,0 +1,11 @@
+#ignore hidden folders and files except .gitignore.
+.*
+!.gitignore
+
+#ignore other folders and files.
+build
+*.iml
+assets/
+captures/
+local.properties
+threads_report.txt

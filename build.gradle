@@ -1,0 +1,75 @@
+/*
+ * Copyright (C) 2013-2017 Alfonso Bocanegra de Luis <albodelu@gmail.com>.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * 	http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.1'
+//        classpath 'com.android.databinding:dataBinder:1.0+'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+// Control Android properties of all your modules from the main project.
+// See Tip 1: http://tools.android.com/tech-docs/new-build-system/tips
+// Parameterize values so they can be overridden by environment level or command line properties.
+// See gradle.properties file for more information on the overriding system and the custom values.
+project.ext {
+    androidCompileSdkVersion = Integer.parseInt(ANDROID_COMPILE_SDK_VERSION)
+    androidBuildToolsVersion = ANDROID_BUILD_TOOLS_VERSION
+
+    androidDefaultApplicationId = ANDROID_DEFAULT_APPLICATION_ID
+
+    androidDefaultMinSdkVersion = ANDROID_DEFAULT_MIN_SDK_VERSION
+    androidDefaultTargetSdkVersion = Integer.parseInt(ANDROID_DEFAULT_TARGET_SDK_VERSION)
+    androidDefaultVersionCode = Integer.parseInt(ANDROID_DEFAULT_VERSION_CODE)
+    androidDefaultVersionName = ANDROID_DEFAULT_VERSION_NAME
+
+    androidDebugStoreFile = ANDROID_DEBUG_STORE_FILE
+    androidDebugStorePassword = ANDROID_DEBUG_STORE_PASSWORD
+    androidDebugKeyAlias = ANDROID_DEBUG_KEY_ALIAS
+    androidDebugKeyPassword = ANDROID_DEBUG_KEY_PASSWORD
+
+    androidReleaseStoreFile = ANDROID_RELEASE_STORE_FILE
+    androidReleaseStorePassword = ANDROID_RELEASE_STORE_PASSWORD
+    androidReleaseKeyAlias = ANDROID_RELEASE_KEY_ALIAS
+    androidReleaseKeyPassword = ANDROID_RELEASE_KEY_PASSWORD
+
+//    androidSupportLibVersion = ANDROID_SUPPORT_LIB_VERSION
+//    playServicesLibVersion = PLAY_SERVICES_LIB_VERSION
+}
+
+// Improve Build Server performance.
+// See Tip 3: http://tools.android.com/tech-docs/new-build-system/tips
+project.ext.preDexLibs = !project.hasProperty('disablePreDex')
+
+subprojects {
+    // Disable pre-dexing only on your build server.
+    project.plugins.whenPluginAdded { plugin ->
+        if ("com.android.build.gradle.AppPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        } else if ("com.android.build.gradle.LibraryPlugin".equals(plugin.class.name)) {
+            project.android.dexOptions.preDexLibraries = rootProject.ext.preDexLibs
+        }
+    }
+}
